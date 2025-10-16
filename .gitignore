@@ -1,0 +1,19 @@
+# Yarn
+.yarn
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+# Build outputs
+packages/*/lib
+packages/*/build
+
+# Node modules
+node_modules/
+packages/*/node_modules/
+
+# VSCode
+.vscode/
+.DS_Store
