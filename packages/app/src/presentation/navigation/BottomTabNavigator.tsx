@@ -2,6 +2,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StatusBar, useColorScheme } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Feather } from '@react-native-vector-icons/feather';
+
 import HomeScreen from '../screens/home/HomeScreen';
 import CalendarScreen from '../screens/calendar/CalendarScreen';
 import LibraryScreen from '../screens/library/LibraryScreen';
@@ -39,6 +41,9 @@ function BottomTabNavigator() {
             component={HomeScreen}
             options={{
               tabBarLabel: 'Home',
+              tabBarIcon: ({ color, size }) => (
+                <Feather name="home" color={color} size={size} />
+              ),
             }}
           />
           <Tab.Screen
@@ -46,6 +51,9 @@ function BottomTabNavigator() {
             component={CalendarScreen}
             options={{
               tabBarLabel: 'Calendar',
+              tabBarIcon: ({ color, size }) => (
+                <Feather name="calendar" color={color} size={size} />
+              ),
             }}
           />
           <Tab.Screen
@@ -53,6 +61,9 @@ function BottomTabNavigator() {
             component={LibraryScreen}
             options={{
               tabBarLabel: 'Library',
+              tabBarIcon: ({ color, size }) => (
+                <Feather name="book" color={color} size={size} />
+              ),
             }}
           />
           <Tab.Screen
@@ -60,6 +71,9 @@ function BottomTabNavigator() {
             component={MyPageScreen}
             options={{
               tabBarLabel: 'My Page',
+              tabBarIcon: ({ color, size }) => (
+                <Feather name="user" color={color} size={size} />
+              ),
             }}
           />
         </Tab.Navigator>
