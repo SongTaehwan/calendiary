@@ -1,8 +1,9 @@
-export function multiply(a: number, b: number): number {
-  console.log('multiply22', a, b);
-  return a * b;
-}
+// calendars
+export { default as Calendar } from './calendars/Calendar';
 
-export function add(a: number, b: number): number {
-  return a + b;
-}
+// utils
+export { LocaleConfig } from './utils/locale';
+
+// types
+export type { CalendarProps } from './calendars/Calendar';
+export type { LocaleKey, SupportedLanguage } from './utils/locale';
