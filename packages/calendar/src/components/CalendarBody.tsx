@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import {
   Animated,
   FlatList,
@@ -11,6 +11,7 @@ import {
 import { generateCalendarDates, type CalendarDate } from '../utils/calendar';
 import { addMonths } from '../utils/date';
 import Day from './Day';
+import useCalendarDynamicHeight from '../hooks/useCalendarDynamicHeight';
 
 interface CalendarBodyProps {
   dates: CalendarDate[];
@@ -38,27 +39,10 @@ const CalendarBody: React.FC<CalendarBodyProps> = ({
   const flatListRef = useRef<FlatList>(null);
 
   const SEVEN_DAYS = 7;
-  // 주 셀 높이
-  const WEEK_HEIGHT = calendarWidth / SEVEN_DAYS;
-
-  // 현재 월의 주 수 계산
-  const currentWeeksCount = dates.length / SEVEN_DAYS;
-
-  // 달력 컨테이너 높이
-  const animatedHeight = useRef(
-    new Animated.Value(currentWeeksCount * WEEK_HEIGHT)
-  ).current;
-
-  useEffect(() => {
-    const currentWeeksCount = dates.length / SEVEN_DAYS;
-    const newHeight = currentWeeksCount * WEEK_HEIGHT;
-
-    Animated.timing(animatedHeight, {
-      toValue: newHeight,
-      duration: 250,
-      useNativeDriver: false,
-    }).start();
-  }, [dates.length, animatedHeight]);
+  const animatedHeight = useCalendarDynamicHeight({
+    weeksCount: dates.length / SEVEN_DAYS,
+    weekHeight: calendarWidth / SEVEN_DAYS,
+  });
 
   // 3개의 달력 데이터 (이전, 현재, 다음)
   const monthsData = useMemo(() => {
