@@ -67,12 +67,13 @@ export const getMonthYearText = (
   const year = date.getFullYear();
   const month = date.getMonth();
   const localeConfig = getLocaleConfig(locale);
+  const monthText = localeConfig.monthText[month];
 
   if (locale === SupportedLanguage.KO) {
-    return `${year}년 ${month}월`;
+    return `${year}년 ${monthText}`;
   }
 
-  return `${localeConfig.monthText[month]} ${year}`;
+  return `${monthText} ${year}`;
 };
 
 export const getWeekDayNames = (
