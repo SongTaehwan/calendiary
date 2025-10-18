@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { CalendarProps } from '../calendars/Calendar';
 import { addMonths, getToday, startOfDay } from '../utils/date';
 
@@ -27,6 +27,27 @@ const useCalendarState = ({
   const [currentMonth, setCurrentMonth] = useState<Date>(
     () => new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1)
   );
+
+  // handleDateSelect 이벤트를 통해서 날짜를 바꾸지 않고 외부에서 직접 바꾼 경우 월 데이터 업데이트
+  // 예: 달력 컴포넌트 밖에서 selectedDate 값을 코드로 변경한 경우
+  useEffect(() => {
+    if (!isControlled) {
+      return;
+    }
+
+    if (
+      controlledSelectedDate.getMonth() !== currentMonth.getMonth() ||
+      controlledSelectedDate.getFullYear() !== currentMonth.getFullYear()
+    ) {
+      setCurrentMonth(
+        new Date(
+          controlledSelectedDate.getFullYear(),
+          controlledSelectedDate.getMonth(),
+          1
+        )
+      );
+    }
+  }, [controlledSelectedDate]);
 
   // 선택된 날짜 변경 처리
   const handleDateSelect = useCallback(
