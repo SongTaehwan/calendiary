@@ -9,7 +9,6 @@ interface MonthData {
 }
 
 interface UseCalendarMonthsDataProps {
-  dates: CalendarDate[];
   currentMonth: Date;
   selectedDate: Date;
 }
@@ -17,9 +16,9 @@ interface UseCalendarMonthsDataProps {
 /**
  * 이전/현재/다음 3개월의 달력 데이터 생성
  * - 무한 스크롤 패턴을 위한 3개월 데이터
+ * - 내부에서 모든 월의 데이터를 생성 (데이터 생성 책임 집중)
  */
 const useCalendarMonthsData = ({
-  dates,
   currentMonth,
   selectedDate,
 }: UseCalendarMonthsDataProps): MonthData[] => {
@@ -30,6 +29,12 @@ const useCalendarMonthsData = ({
     const prevMonthDates = generateCalendarDates(
       prevMonth.getFullYear(),
       prevMonth.getMonth(),
+      selectedDate
+    );
+
+    const currentMonthDates = generateCalendarDates(
+      currentMonth.getFullYear(),
+      currentMonth.getMonth(),
       selectedDate
     );
 
@@ -47,8 +52,8 @@ const useCalendarMonthsData = ({
       },
       {
         key: `${currentMonth.getFullYear()}-${currentMonth.getMonth()}`,
-        dates: dates,
-        weeksCount: dates.length / 7,
+        dates: currentMonthDates,
+        weeksCount: currentMonthDates.length / 7,
       },
       {
         key: `${nextMonth.getFullYear()}-${nextMonth.getMonth()}`,
@@ -56,7 +61,7 @@ const useCalendarMonthsData = ({
         weeksCount: nextMonthDates.length / 7,
       },
     ];
-  }, [currentMonth, dates, selectedDate]);
+  }, [currentMonth, selectedDate]);
 };
 
 export default useCalendarMonthsData;

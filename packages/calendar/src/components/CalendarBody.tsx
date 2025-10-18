@@ -9,7 +9,6 @@ import Animated from 'react-native-reanimated';
 import { useCalendarHeight } from '../hooks/domains/useCalendarHeight';
 
 interface CalendarBodyProps {
-  dates: CalendarDate[];
   currentMonth: Date;
   selectedDate: Date;
   onSelectDate: (date: Date) => void;
@@ -23,7 +22,6 @@ interface CalendarBodyProps {
  * - FlatList 페이징으로 월 이동 (네이티브 성능)
  */
 const CalendarBody: React.FC<CalendarBodyProps> = ({
-  dates,
   currentMonth,
   selectedDate,
   onSelectDate,
@@ -33,8 +31,13 @@ const CalendarBody: React.FC<CalendarBodyProps> = ({
   const { width: calendarWidth } = useWindowDimensions();
   const flatListRef = useRef<FlatList>(null);
 
+  const monthsData = useCalendarMonthsData({
+    currentMonth,
+    selectedDate,
+  });
+
   const calendarHeight = useCalendarHeight({
-    datesCount: dates.length,
+    datesCount: monthsData[1]?.dates.length ?? 0,
     containerWidth: calendarWidth,
   });
 
@@ -50,12 +53,6 @@ const CalendarBody: React.FC<CalendarBodyProps> = ({
       onScrollToPrev: onSwipeLeft,
       onScrollToNext: onSwipeRight,
     });
-
-  const monthsData = useCalendarMonthsData({
-    dates: dates,
-    currentMonth,
-    selectedDate,
-  });
 
   const renderWeeks = useMemo(
     () =>
