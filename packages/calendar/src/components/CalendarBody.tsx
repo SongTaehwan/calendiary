@@ -1,5 +1,6 @@
-import { useCallback, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import {
+  Animated,
   FlatList,
   StyleSheet,
   useWindowDimensions,
@@ -35,6 +36,29 @@ const CalendarBody: React.FC<CalendarBodyProps> = ({
 }) => {
   const { width: calendarWidth } = useWindowDimensions();
   const flatListRef = useRef<FlatList>(null);
+
+  const SEVEN_DAYS = 7;
+  // 주 셀 높이
+  const WEEK_HEIGHT = calendarWidth / SEVEN_DAYS;
+
+  // 현재 월의 주 수 계산
+  const currentWeeksCount = dates.length / SEVEN_DAYS;
+
+  // 달력 컨테이너 높이
+  const animatedHeight = useRef(
+    new Animated.Value(currentWeeksCount * WEEK_HEIGHT)
+  ).current;
+
+  useEffect(() => {
+    const currentWeeksCount = dates.length / SEVEN_DAYS;
+    const newHeight = currentWeeksCount * WEEK_HEIGHT;
+
+    Animated.timing(animatedHeight, {
+      toValue: newHeight,
+      duration: 250,
+      useNativeDriver: false,
+    }).start();
+  }, [dates.length, animatedHeight]);
 
   // 3개의 달력 데이터 (이전, 현재, 다음)
   const monthsData = useMemo(() => {
@@ -136,8 +160,20 @@ const CalendarBody: React.FC<CalendarBodyProps> = ({
     [calendarWidth, onSelectDate, renderWeeks]
   );
 
+  const handleGetItemLayout = useCallback(
+    (
+      _: Readonly<ArrayLike<(typeof monthsData)[0]>> | undefined,
+      index: number
+    ) => ({
+      length: calendarWidth,
+      offset: calendarWidth * index,
+      index,
+    }),
+    [calendarWidth]
+  );
+
   return (
-    <View style={styles.container}>
+    <Animated.View style={[styles.container, { height: animatedHeight }]}>
       <FlatList<(typeof monthsData)[0]>
         ref={flatListRef}
         data={monthsData}
@@ -148,17 +184,13 @@ const CalendarBody: React.FC<CalendarBodyProps> = ({
         showsHorizontalScrollIndicator={false}
         scrollEventThrottle={16}
         onMomentumScrollEnd={handleMomentumScrollEnd}
-        getItemLayout={(_, index) => ({
-          length: calendarWidth,
-          offset: calendarWidth * index,
-          index,
-        })}
+        getItemLayout={handleGetItemLayout}
         initialScrollIndex={1}
         decelerationRate={'fast'}
         bounces={false}
         removeClippedSubviews={false}
       />
-    </View>
+    </Animated.View>
   );
 };
 
