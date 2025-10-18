@@ -15,16 +15,29 @@ export const getWeekDay = (date: Date): number => {
   return date.getDay();
 };
 
-// 일 단위로 날짜 추가
+// 일 단위로 날짜 변경
 export const addDays = (date: Date, days: number): Date => {
   const newDate = new Date(date);
   newDate.setDate(newDate.getDate() + days);
   return startOfDay(newDate);
 };
 
-// 주 단위로 날짜 추가
+// 주 단위로 날짜 변경
 export const addWeeks = (date: Date, weeks: number): Date => {
   return addDays(date, weeks * 7);
+};
+
+// 월 단위로 날짜 변경
+export const addMonths = (date: Date, months: number): Date => {
+  const newDate = new Date(date);
+  const targetMonth = newDate.getMonth() + months;
+  newDate.setMonth(targetMonth);
+
+  if (newDate.getMonth() !== (((date.getMonth() + months) % 12) + 12) % 12) {
+    newDate.setDate(0); // 이전 달의 마지막 날로 설정
+  }
+
+  return startOfDay(newDate);
 };
 
 export const isSameDay = (date1: Date, date2: Date): boolean => {
