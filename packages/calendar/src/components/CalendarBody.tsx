@@ -1,17 +1,12 @@
-import { useCallback, useMemo, useRef } from 'react';
-import {
-  Animated,
-  FlatList,
-  StyleSheet,
-  useWindowDimensions,
-  View,
-  type NativeScrollEvent,
-  type NativeSyntheticEvent,
-} from 'react-native';
-import { generateCalendarDates, type CalendarDate } from '../utils/calendar';
-import { addMonths } from '../utils/date';
+import { useMemo, useRef } from 'react';
+import { View, FlatList, StyleSheet, useWindowDimensions } from 'react-native';
+import { type CalendarDate } from '../utils/calendar';
 import Day from './Day';
-import useCalendarDynamicHeight from '../hooks/useCalendarDynamicHeight';
+import useAnimatedHeightTransition from '../hooks/utils/useAnimatedHeightTransition';
+import useCalendarMonthsData from '../hooks/domains/useCalendarMonthsData';
+import { useInfiniteHorizontalScroll } from '../hooks/utils/useInfiniteHorizontalScroll';
+import Animated from 'react-native-reanimated';
+import { useCalendarHeight } from '../hooks/domains/useCalendarHeight';
 
 interface CalendarBodyProps {
   dates: CalendarDate[];
@@ -38,64 +33,29 @@ const CalendarBody: React.FC<CalendarBodyProps> = ({
   const { width: calendarWidth } = useWindowDimensions();
   const flatListRef = useRef<FlatList>(null);
 
-  const SEVEN_DAYS = 7;
-  const animatedHeight = useCalendarDynamicHeight({
-    weeksCount: dates.length / SEVEN_DAYS,
-    weekHeight: calendarWidth / SEVEN_DAYS,
+  const calendarHeight = useCalendarHeight({
+    datesCount: dates.length,
+    containerWidth: calendarWidth,
   });
 
-  // 3개의 달력 데이터 (이전, 현재, 다음)
-  const monthsData = useMemo(() => {
-    const prevMonth = addMonths(currentMonth, -1);
-    const nextMonth = addMonths(currentMonth, 1);
+  const animatedHeight = useAnimatedHeightTransition({
+    height: calendarHeight,
+    duration: 250,
+  });
 
-    const prevMonthDates = generateCalendarDates(
-      prevMonth.getFullYear(),
-      prevMonth.getMonth(),
-      selectedDate
-    );
+  const { handleMomentumScrollEnd, handleGetItemLayout } =
+    useInfiniteHorizontalScroll({
+      itemWidth: calendarWidth,
+      scrollableRef: flatListRef,
+      onScrollToPrev: onSwipeLeft,
+      onScrollToNext: onSwipeRight,
+    });
 
-    const nextMonthDates = generateCalendarDates(
-      nextMonth.getFullYear(),
-      nextMonth.getMonth(),
-      selectedDate
-    );
-
-    return [
-      {
-        key: `${prevMonth.getFullYear()}-${prevMonth.getMonth()}`,
-        dates: prevMonthDates,
-        weeksCount: prevMonthDates.length / 7,
-      },
-      {
-        key: `${currentMonth.getFullYear()}-${currentMonth.getMonth()}`,
-        dates,
-        weeksCount: dates.length / 7,
-      },
-      {
-        key: `${nextMonth.getFullYear()}-${nextMonth.getMonth()}`,
-        dates: nextMonthDates,
-        weeksCount: nextMonthDates.length / 7,
-      },
-    ];
-  }, [currentMonth, dates, selectedDate]);
-
-  // 스크롤 이벤트 처리 (무한 스크롤 패턴)
-  const handleMomentumScrollEnd = useCallback(
-    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-      const offsetX = event.nativeEvent.contentOffset.x;
-      const index = Math.round(offsetX / calendarWidth);
-
-      if (index === 0) {
-        onSwipeLeft();
-        flatListRef.current?.scrollToIndex({ index: 1, animated: false });
-      } else if (index === 2) {
-        onSwipeRight();
-        flatListRef.current?.scrollToIndex({ index: 1, animated: false });
-      }
-    },
-    [calendarWidth, onSwipeLeft, onSwipeRight]
-  );
+  const monthsData = useCalendarMonthsData({
+    dates: dates,
+    currentMonth,
+    selectedDate,
+  });
 
   const renderWeeks = useMemo(
     () =>
@@ -142,18 +102,6 @@ const CalendarBody: React.FC<CalendarBodyProps> = ({
         );
       },
     [calendarWidth, onSelectDate, renderWeeks]
-  );
-
-  const handleGetItemLayout = useCallback(
-    (
-      _: Readonly<ArrayLike<(typeof monthsData)[0]>> | undefined,
-      index: number
-    ) => ({
-      length: calendarWidth,
-      offset: calendarWidth * index,
-      index,
-    }),
-    [calendarWidth]
   );
 
   return (
