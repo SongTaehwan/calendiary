@@ -1,8 +1,8 @@
 import { StyleSheet, View } from 'react-native';
 import CalendarHeader from '../components/CalendarHeader';
 import CalendarWeekDays from '../components/CalendarWeekDays';
+import CalendarGrid from '../components/CalendarGrid';
 import { type LocaleKey } from '../utils/locale';
-import CalendarBody from '../components/CalendarBody';
 import useCalendarState from '../hooks/useCalendarState';
 
 export interface CalendarProps {
@@ -36,7 +36,7 @@ const Calendar: React.FC<CalendarProps> = (props) => {
       <CalendarWeekDays locale={locale} />
 
       {/* 달력 날짜 표시 */}
-      <CalendarBody
+      <CalendarGrid
         currentMonth={currentMonth}
         selectedDate={selectedDate}
         onSelectDate={handleDateSelect}

@@ -8,7 +8,7 @@ import { useInfiniteHorizontalScroll } from '../hooks/utils/useInfiniteHorizonta
 import Animated from 'react-native-reanimated';
 import { useCalendarHeight } from '../hooks/domains/useCalendarHeight';
 
-interface CalendarBodyProps {
+interface CalendarGridProps {
   currentMonth: Date;
   selectedDate: Date;
   onSelectDate: (date: Date) => void;
@@ -21,7 +21,7 @@ interface CalendarBodyProps {
  * - 4~6주 x 7일 형태로 날짜 표시 (동적)
  * - FlatList 페이징으로 월 이동 (네이티브 성능)
  */
-const CalendarBody: React.FC<CalendarBodyProps> = ({
+const CalendarGrid: React.FC<CalendarGridProps> = ({
   currentMonth,
   selectedDate,
   onSelectDate,
@@ -133,4 +133,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CalendarBody;
+export default CalendarGrid;
