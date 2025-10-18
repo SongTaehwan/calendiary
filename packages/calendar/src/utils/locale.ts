@@ -74,3 +74,10 @@ export const getMonthYearText = (
 
   return `${localeConfig.monthText[month]} ${year}`;
 };
+
+export const getWeekDayNames = (
+  locale: LocaleKey = SupportedLanguage.KO
+): string[] => {
+  const localeConfig = getLocaleConfig(locale);
+  return localeConfig.weekDayText;
+};
