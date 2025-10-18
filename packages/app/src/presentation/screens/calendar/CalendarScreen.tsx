@@ -1,20 +1,35 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Calendar } from '@calendiary/calendar';
+import { useState } from 'react';
 
 function CalendarScreen() {
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+
+  const handleOnDateChange = (date: Date) => {
+    setSelectedDate(date);
+  };
+
   return (
-    <View style={styles.screenContainer}>
-      <Text style={styles.screenTitle}>달력</Text>
-      <Text style={styles.screenDescription}>달력 화면입니다</Text>
-    </View>
+    <SafeAreaView style={styles.screenContainer}>
+      <ScrollView>
+        <Calendar
+          selectedDate={selectedDate}
+          onDateChange={handleOnDateChange}
+        />
+        <Calendar
+          selectedDate={selectedDate}
+          onDateChange={handleOnDateChange}
+        />
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   screenContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#ffffff',
   },
   screenTitle: {
     fontSize: 24,
