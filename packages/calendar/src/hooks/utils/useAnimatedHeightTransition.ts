@@ -16,7 +16,7 @@ const useAnimatedHeightTransition = ({
     animatedHeight.value = withTiming(height, {
       duration,
     });
-  }, [height, duration, animatedHeight]);
+  }, [height, duration]);
 
   return animatedHeight;
 };
