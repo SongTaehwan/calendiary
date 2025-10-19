@@ -1,9 +1,15 @@
-import { FlatList, StyleSheet, useWindowDimensions, View } from 'react-native';
-import useInfiniteHorizontalScroll from '../hooks/utils/useInfiniteHorizontalScroll';
-import useCalendarWeeksData from '../hooks/domains/useCalendarWeeksData';
+import { FlatList, useWindowDimensions } from 'react-native';
 import { useMemo, useRef } from 'react';
+
+// Utility hooks
+import useInfiniteHorizontalScroll from '../hooks/utils/useInfiniteHorizontalScroll';
+
+// Domain hooks
+import useCalendarWeeksData from '../hooks/domains/useCalendarWeeksData';
 import type { CalendarData } from '../hooks/domains/types';
-import Day from './Day';
+
+// Components
+import Week from './Week';
 
 interface WeekCalendarProps {
   currentMonth: Date;
@@ -13,6 +19,10 @@ interface WeekCalendarProps {
   onSelectDate: (date: Date) => void;
 }
 
+/**
+ * 주간 달력 컴포넌트
+ * - 주간 모드는 애니메이션 효과 없이 주간 데이터를 표시
+ */
 const WeekCalendar = ({
   currentMonth,
   selectedDate,
@@ -42,25 +52,14 @@ const WeekCalendar = ({
   const renderWeekCalendarItem = useMemo(
     () =>
       ({ item }: { item: CalendarData }) => {
-        const { key: weekKey, dates: weekDates } = item;
+        const { dates: weekDates } = item;
 
         return (
-          <View
-            style={[styles.weekCalendarContainer, { width: calendarWidth }]}
-          >
-            <View style={styles.weekContainer}>
-              {weekDates.map((calendarDate, dayIndex) => {
-                const dayKey = `${weekKey}-day-${dayIndex}`;
-                return (
-                  <Day
-                    key={dayKey}
-                    calendarDate={calendarDate}
-                    onPress={onSelectDate}
-                  />
-                );
-              })}
-            </View>
-          </View>
+          <Week
+            style={{ width: calendarWidth }}
+            days={weekDates}
+            onSelectDate={onSelectDate}
+          />
         );
       },
     [calendarWidth, onSelectDate]
@@ -85,16 +84,5 @@ const WeekCalendar = ({
     />
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    // backgroundColor: 'green',
-  },
-  monthCalendarContainer: {},
-  weekCalendarContainer: {},
-  weekContainer: {
-    flexDirection: 'row',
-  },
-});
 
 export default WeekCalendar;
