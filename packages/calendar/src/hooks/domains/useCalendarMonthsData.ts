@@ -1,12 +1,7 @@
 import { useMemo } from 'react';
-import { generateCalendarDates, type CalendarDate } from '../../utils/calendar';
+import { generateMonthCalendarDates } from '../../utils/calendar';
 import { addMonths } from '../../utils/date';
-
-interface MonthData {
-  key: string;
-  dates: CalendarDate[];
-  weeksCount: number;
-}
+import type { CalendarData } from './types';
 
 interface UseCalendarMonthsDataProps {
   currentMonth: Date;
@@ -21,7 +16,7 @@ interface UseCalendarMonthsDataProps {
 const useCalendarMonthsData = ({
   currentMonth,
   selectedDate,
-}: UseCalendarMonthsDataProps): MonthData[] => {
+}: UseCalendarMonthsDataProps): CalendarData[] => {
   return useMemo(() => {
     const prevMonth = addMonths(currentMonth, -1);
     const nextMonth = addMonths(currentMonth, 1);

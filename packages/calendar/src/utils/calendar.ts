@@ -1,3 +1,4 @@
+import type { CalendarDate } from '../hooks/domains/types';
 import {
   getToday,
   isSameDay,
@@ -7,14 +8,6 @@ import {
   addDays,
   getDaysInMonth,
 } from './date';
-
-export interface CalendarDate {
-  date: Date;
-  /** 현재 표시 중인 월의 날짜인지 여부 (false면 이전/다음 달 날짜) */
-  isCurrentMonth: boolean;
-  isToday: boolean;
-  isSelected: boolean;
-}
 
 /**
  * 특정 년월에 필요한 주(week) 수를 계산
