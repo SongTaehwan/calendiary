@@ -40,8 +40,8 @@ const ExpandableCalendar = (props: ExpandableCalendarProps) => {
       return getMonthYearText(currentMonth, locale);
     }
 
-    return getWeekOfMonthTextWithYear(selectedDate, locale);
-  }, [currentMonth, locale, mode, selectedDate]);
+    return getWeekOfMonthTextWithYear(currentMonth, locale);
+  }, [currentMonth, locale, mode]);
 
   return (
     <View style={styles.container}>
