@@ -7,6 +7,11 @@ import useCalendarMonthsData from '../hooks/domains/useCalendarMonthsData';
 import { useInfiniteHorizontalScroll } from '../hooks/utils/useInfiniteHorizontalScroll';
 import Animated from 'react-native-reanimated';
 import { useCalendarHeight } from '../hooks/domains/useCalendarHeight';
+import useVerticalSwipeGesture from '../hooks/utils/useVerticalSwipeGesture';
+import {
+  GestureDetector,
+  GestureHandlerRootView,
+} from 'react-native-gesture-handler';
 
 interface ExpandableCalendarGridProps {
   viewMode: 'month' | 'week';
@@ -43,6 +48,11 @@ const ExpandableCalendarGrid = ({
   const animatedHeight = useAnimatedHeightTransition({
     height: calendarHeight,
     duration: 250,
+  });
+
+  const panGesture = useVerticalSwipeGesture({
+    onSwipeUp: () => updateMode('week'),
+    onSwipeDown: () => updateMode('month'),
   });
 
   const { handleMomentumScrollEnd, handleGetItemLayout } =
@@ -101,24 +111,28 @@ const ExpandableCalendarGrid = ({
   );
 
   return (
-    <Animated.View style={[styles.container, { height: animatedHeight }]}>
-      <FlatList<(typeof monthsData)[0]>
-        ref={flatListRef}
-        data={monthsData}
-        renderItem={renderMonths}
-        keyExtractor={(item) => item.key}
-        horizontal
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-        scrollEventThrottle={16}
-        onMomentumScrollEnd={handleMomentumScrollEnd}
-        getItemLayout={handleGetItemLayout}
-        initialScrollIndex={1}
-        decelerationRate={'fast'}
-        bounces={false}
-        removeClippedSubviews={false}
-      />
-    </Animated.View>
+    <GestureHandlerRootView>
+      <GestureDetector gesture={panGesture}>
+        <Animated.View style={[styles.container, { height: animatedHeight }]}>
+          <FlatList<(typeof monthsData)[0]>
+            ref={flatListRef}
+            data={monthsData}
+            renderItem={renderMonths}
+            keyExtractor={(item) => item.key}
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            scrollEventThrottle={16}
+            onMomentumScrollEnd={handleMomentumScrollEnd}
+            getItemLayout={handleGetItemLayout}
+            initialScrollIndex={1}
+            decelerationRate={'fast'}
+            bounces={false}
+            removeClippedSubviews={false}
+          />
+        </Animated.View>
+      </GestureDetector>
+    </GestureHandlerRootView>
   );
 };
 
