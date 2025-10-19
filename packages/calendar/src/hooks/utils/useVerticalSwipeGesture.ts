@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { Gesture } from 'react-native-gesture-handler';
 
 interface UseVerticalSwipeGestureProps {
@@ -14,22 +15,25 @@ export function useVerticalSwipeGesture({
   onSwipeDown,
   threshold = 50,
 }: UseVerticalSwipeGestureProps) {
-  const panGesture = Gesture.Pan()
-    .runOnJS(true)
-    .activeOffsetY([-20, 20])
-    .onEnd((event) => {
-      const { translationY, translationX } = event;
+  const panGesture = useMemo(() => {
+    return Gesture.Pan()
+      .runOnJS(true)
+      .activeOffsetY([-20, 20])
+      .onEnd((event) => {
+        const { translationY, translationX } = event;
 
-      const isVerticalGesture = Math.abs(translationY) > Math.abs(translationX);
+        const isVerticalGesture =
+          Math.abs(translationY) > Math.abs(translationX);
 
-      if (isVerticalGesture && Math.abs(translationY) > threshold) {
-        if (translationY < 0) {
-          onSwipeUp();
-        } else {
-          onSwipeDown();
+        if (isVerticalGesture && Math.abs(translationY) > threshold) {
+          if (translationY < 0) {
+            onSwipeUp();
+          } else {
+            onSwipeDown();
+          }
         }
-      }
-    });
+      });
+  }, [onSwipeUp, onSwipeDown, threshold]);
 
   return panGesture;
 }
