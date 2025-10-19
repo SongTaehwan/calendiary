@@ -114,6 +114,10 @@ export const isSameMonth = (date1: Date, date2: Date): boolean => {
   );
 };
 
+export const getWeek = (date: Date): number => {
+  return Math.floor((date.getDate() - getWeekDay(date)) / 7);
+};
+
 // 윤년 여부 확인
 export const isLeapYear = (year: number): boolean => {
   if (year < 0) {
@@ -121,4 +125,11 @@ export const isLeapYear = (year: number): boolean => {
   }
 
   return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+};
+
+export const isDifferentMonthOrYear = (date1: Date, date2: Date): boolean => {
+  return (
+    date1.getMonth() !== date2.getMonth() ||
+    date1.getFullYear() !== date2.getFullYear()
+  );
 };
