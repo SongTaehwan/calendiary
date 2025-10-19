@@ -7,7 +7,7 @@ import {
 import CalendarHeader from '../components/CalendarHeader';
 import CalendarWeekDays from '../components/CalendarWeekDays';
 import useExpandableCalendarState from '../hooks/domains/useExpandableCalendarState';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import ExpandableCalendarGrid from '../components/ExpandableCalendarGrid';
 
 export interface ExpandableCalendarProps {
@@ -43,6 +43,14 @@ const ExpandableCalendar = (props: ExpandableCalendarProps) => {
     return getWeekOfMonthTextWithYear(currentMonth, locale);
   }, [currentMonth, locale, mode]);
 
+  const handleSwipeDown = useCallback(() => {
+    updateMode('month');
+  }, [updateMode]);
+
+  const handleSwipeUp = useCallback(() => {
+    updateMode('week');
+  }, [updateMode]);
+
   return (
     <View style={styles.container}>
       {/* 달력 헤더 (월/주 이동 버튼 포함) */}
@@ -63,7 +71,8 @@ const ExpandableCalendar = (props: ExpandableCalendarProps) => {
         onSelectDate={handleDateSelect}
         onSwipeLeft={handlePrevPeriod}
         onSwipeRight={handleNextPeriod}
-        updateMode={updateMode}
+        onSwipeUp={handleSwipeUp}
+        onSwipeDown={handleSwipeDown}
       />
     </View>
   );
