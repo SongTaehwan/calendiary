@@ -83,6 +83,26 @@ export const generateMonthCalendarDates = (
   return dates;
 };
 
+export const generateWeekCalendarDates = (
+  weekStart: Date,
+  selectedDate?: Date
+): CalendarDate[] => {
+  const today = getToday();
+  const dates: CalendarDate[] = [];
+
+  for (let i = 0; i < 7; i++) {
+    const date = addDays(weekStart, i);
+
+    dates.push({
+      date,
+      isCurrentMonth: isSameMonth(date, weekStart),
+      isToday: isSameDay(date, today),
+      isSelected: selectedDate ? isSameDay(date, selectedDate) : false,
+    });
+  }
+  return dates;
+};
+
 /**
  * 날짜가 속한 주의 인덱스 계산 (0-based)
  * @param date - 확인할 날짜

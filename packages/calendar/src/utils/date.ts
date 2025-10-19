@@ -49,6 +49,15 @@ export const getWeekDay = (date: Date): number => {
 };
 
 /**
+ * 주 시작 날짜 반환 (일요일 기준)
+ * @param date
+ * @returns
+ */
+export const getWeekStart = (date: Date): Date => {
+  return addDays(date, -getWeekDay(date));
+};
+
+/**
  * 월 시작 날짜 반환 (x월 1일)
  * @param date 날짜
  * @return 월 시작 날짜 (로컬 시간 기준) 0 시 0 분 0 초 0 밀리초
