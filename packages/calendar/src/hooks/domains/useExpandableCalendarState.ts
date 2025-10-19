@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import type { ExpandableCalendarProps } from '../../calendars/ExpandableCalendar';
 import {
   addMonths,
   addWeeks,
@@ -10,16 +9,22 @@ import {
 
 export type CalendarMode = 'month' | 'week';
 
+export interface UseExpandableCalendarStateProps {
+  defaultDate?: Date;
+  selectedDate?: Date;
+  onDateChange?: (date: Date) => void;
+}
+
 /**
  * 확장 가능한 달력 상태 관리
  * - 기본 달력 상태에 모드(월/주) 전환 기능 추가
  * - 모드에 따라 월 단위 또는 주 단위 이동
  */
-export function useExpandableCalendarState({
+const useExpandableCalendarState = ({
   defaultDate,
   selectedDate: controlledSelectedDate,
   onDateChange,
-}: Omit<ExpandableCalendarProps, 'locale'>) {
+}: UseExpandableCalendarStateProps) => {
   // 외부에서 날짜를 선택하지 않았을 경우, 오늘 날짜를 기본 날짜로 설정
   const [internalSelectedDate, setInternalSelectedDate] = useState<Date>(() =>
     startOfDay(defaultDate || getToday())
@@ -147,6 +152,6 @@ export function useExpandableCalendarState({
     handleNextPeriod,
     updateMode,
   };
-}
+};
 
 export default useExpandableCalendarState;

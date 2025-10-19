@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-interface UseCalendarHeightParams {
+interface UseCalendarHeightProps {
   datesCount: number;
   containerWidth: number;
 }
@@ -10,10 +10,10 @@ interface UseCalendarHeightParams {
  * - 주 수와 셀 크기 기반 높이 계산
  * - 도메인 로직 캡슐화
  */
-export function useCalendarHeight({
+const useCalendarHeight = ({
   datesCount,
   containerWidth,
-}: UseCalendarHeightParams): number {
+}: UseCalendarHeightProps) => {
   return useMemo(() => {
     const DAYS_IN_WEEK = 7;
     const weeksCount = datesCount / DAYS_IN_WEEK;
@@ -22,4 +22,6 @@ export function useCalendarHeight({
 
     return weeksCount * dayHeight;
   }, [datesCount, containerWidth]);
-}
+};
+
+export default useCalendarHeight;

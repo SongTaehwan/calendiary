@@ -16,12 +16,12 @@ interface UseInfiniteHorizontalScrollProps {
  * 무한 스크롤 패턴 (이전-현재-다음)
  * - 양 끝으로 스크롤 시 콜백 실행 후 중앙으로 리셋
  */
-export function useInfiniteHorizontalScroll({
+const useInfiniteHorizontalScroll = ({
   itemWidth,
   scrollableRef,
   onScrollToPrev,
   onScrollToNext,
-}: UseInfiniteHorizontalScrollProps) {
+}: UseInfiniteHorizontalScrollProps) => {
   const handleMomentumScrollEnd = useCallback(
     (event: NativeSyntheticEvent<NativeScrollEvent>) => {
       if (!scrollableRef.current) {
@@ -65,4 +65,6 @@ export function useInfiniteHorizontalScroll({
     handleMomentumScrollEnd,
     handleGetItemLayout,
   };
-}
+};
+
+export default useInfiniteHorizontalScroll;

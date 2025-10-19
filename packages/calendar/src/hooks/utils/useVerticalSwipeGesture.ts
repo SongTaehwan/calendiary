@@ -10,11 +10,11 @@ interface UseVerticalSwipeGestureProps {
 /**
  * 수직 스와이프 제스처 감지 훅
  */
-export function useVerticalSwipeGesture({
+const useVerticalSwipeGesture = ({
   onSwipeUp,
   onSwipeDown,
   threshold = 50,
-}: UseVerticalSwipeGestureProps) {
+}: UseVerticalSwipeGestureProps) => {
   const panGesture = useMemo(() => {
     return Gesture.Pan()
       .runOnJS(true)
@@ -36,6 +36,6 @@ export function useVerticalSwipeGesture({
   }, [onSwipeUp, onSwipeDown, threshold]);
 
   return panGesture;
-}
+};
 
 export default useVerticalSwipeGesture;

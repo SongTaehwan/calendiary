@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { generateWeekCalendarDates } from '../../utils/calendar';
-import { addWeeks, getWeekStart, isSameMonth } from '../../utils/date';
+import { addWeeks, getWeekStart } from '../../utils/date';
 import type { CalendarData } from './types';
 
 interface UseCalendarWeeksDataProps {
