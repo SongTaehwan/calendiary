@@ -47,7 +47,7 @@ export const getWeeksInMonth = (year: number, month: number): number => {
  * @param selectedDate - 현재 선택된 날짜 (선택 표시용)
  * @returns 배열 (필요한 주 수 x 7일)
  */
-export const generateCalendarDates = (
+export const generateMonthCalendarDates = (
   year: number,
   month: number,
   selectedDate?: Date

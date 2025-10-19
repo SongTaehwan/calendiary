@@ -21,19 +21,19 @@ const useCalendarMonthsData = ({
     const prevMonth = addMonths(currentMonth, -1);
     const nextMonth = addMonths(currentMonth, 1);
 
-    const prevMonthDates = generateCalendarDates(
+    const prevMonthDates = generateMonthCalendarDates(
       prevMonth.getFullYear(),
       prevMonth.getMonth(),
       selectedDate
     );
 
-    const currentMonthDates = generateCalendarDates(
+    const currentMonthDates = generateMonthCalendarDates(
       currentMonth.getFullYear(),
       currentMonth.getMonth(),
       selectedDate
     );
 
-    const nextMonthDates = generateCalendarDates(
+    const nextMonthDates = generateMonthCalendarDates(
       nextMonth.getFullYear(),
       nextMonth.getMonth(),
       selectedDate
