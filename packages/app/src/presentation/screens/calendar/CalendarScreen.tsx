@@ -1,6 +1,6 @@
-import { StyleSheet, ScrollView } from 'react-native';
+import { StyleSheet, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Calendar } from '@calendiary/calendar';
+import { Calendar, ExpandableCalendar } from '@calendiary/calendar';
 import { useState } from 'react';
 
 function CalendarScreen() {
@@ -12,11 +12,15 @@ function CalendarScreen() {
 
   return (
     <SafeAreaView style={styles.screenContainer}>
-      <ScrollView>
-        <Calendar
+      <View style={{ borderColor: 'red' }}>
+        {/* 주-월간으로 전환 가능한 캘린더 */}
+        <ExpandableCalendar
           selectedDate={selectedDate}
           onDateChange={handleOnDateChange}
         />
+      </View>
+      <ScrollView>
+        {/* 월간 캘린더 */}
         <Calendar
           selectedDate={selectedDate}
           onDateChange={handleOnDateChange}
