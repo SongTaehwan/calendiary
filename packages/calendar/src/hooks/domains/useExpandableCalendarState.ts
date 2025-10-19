@@ -21,7 +21,7 @@ export function useExpandableCalendarState({
   });
 
   // 달력 모드 (월/주)
-  const [mode, setMode] = useState<CalendarMode>('week');
+  const [mode, setMode] = useState<CalendarMode>('month');
 
   // // 모드에 따라 적절한 핸들러 반환
   const handlePrevPeriod =
