@@ -74,7 +74,7 @@ export const generateMonthCalendarDates = (
 
     dates.push({
       date,
-      isCurrentMonth: isSameMonth(date, currentMonthDate),
+      isFocused: isSameMonth(date, currentMonthDate),
       isToday: isSameDay(date, today),
       isSelected: selectedDate ? isSameDay(date, selectedDate) : false,
     });
@@ -94,8 +94,8 @@ export const generateWeekCalendarDates = (
     const date = addDays(weekStart, i);
     dates.push({
       date,
-      isCurrentMonth: isSameMonth(date, selectedDate),
       isToday: isSameDay(date, today),
+      isFocused: true,
       isSelected: isSameDay(date, selectedDate),
     });
   }

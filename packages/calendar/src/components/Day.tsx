@@ -2,7 +2,7 @@
 
 import React, { useCallback } from 'react';
 import { Pressable, Text, StyleSheet, View } from 'react-native';
-import type { CalendarDate } from '../utils/calendar';
+import type { CalendarDate } from '../hooks/domains/types';
 
 interface DayProps {
   calendarDate: CalendarDate;
@@ -13,7 +13,7 @@ interface DayProps {
  * 날짜 셀 컴포넌트
  */
 export const Day: React.FC<DayProps> = ({ calendarDate, onPress }) => {
-  const { date, isCurrentMonth, isToday, isSelected } = calendarDate;
+  const { date, isFocused, isToday, isSelected } = calendarDate;
 
   const handlePress = useCallback(() => {
     onPress(date);
@@ -21,7 +21,7 @@ export const Day: React.FC<DayProps> = ({ calendarDate, onPress }) => {
 
   const textStyle = [
     styles.text,
-    !isCurrentMonth && styles.otherMonthText, // 다른 월 날짜는 흐리게
+    !isFocused && styles.otherMonthText, // 다른 월 날짜는 흐리게
     isToday && styles.todayText, // 오늘 날짜는 파란색
     isSelected && styles.selectedText, // 선택된 날짜는 흰색
   ];

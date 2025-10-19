@@ -1,7 +1,7 @@
 export interface CalendarDate {
   date: Date;
-  isCurrentMonth: boolean;
   isToday: boolean;
+  isFocused: boolean;
   isSelected: boolean;
 }
 
