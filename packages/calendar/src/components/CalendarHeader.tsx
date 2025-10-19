@@ -1,12 +1,10 @@
 import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
-import { getMonthYearText, type LocaleKey } from '../utils/locale';
 
 interface CalendarHeaderProps {
-  month: Date;
+  title: string;
   onClickPreviousMonth: () => void;
   onClickNextMonth: () => void;
-  locale?: LocaleKey;
 }
 
 /**
@@ -15,13 +13,10 @@ interface CalendarHeaderProps {
  * - 이전/다음 달 이동 버튼
  */
 export const CalendarHeader: React.FC<CalendarHeaderProps> = ({
-  month,
+  title,
   onClickPreviousMonth,
   onClickNextMonth,
-  locale,
 }) => {
-  const monthYearText = getMonthYearText(month, locale);
-
   return (
     <View style={styles.container}>
       <Pressable
@@ -33,7 +28,7 @@ export const CalendarHeader: React.FC<CalendarHeaderProps> = ({
         <Text style={styles.buttonText}>‹</Text>
       </Pressable>
 
-      <Text style={styles.title}>{monthYearText}</Text>
+      <Text style={styles.title}>{title}</Text>
 
       <Pressable
         style={styles.button}

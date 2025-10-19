@@ -24,9 +24,9 @@ export function useExpandableCalendarState({
   const [mode, setMode] = useState<CalendarMode>('week');
 
   // // 모드에 따라 적절한 핸들러 반환
-  const handlePrev =
+  const handlePrevPeriod =
     mode === 'week' ? baseState.handlePrevWeek : baseState.handlePrevMonth;
-  const handleNext =
+  const handleNextPeriod =
     mode === 'week' ? baseState.handleNextWeek : baseState.handleNextMonth;
 
   // 모드 전환
@@ -35,12 +35,12 @@ export function useExpandableCalendarState({
   }, []);
 
   return {
-    handleDateSelect: baseState.handleDateSelect,
+    mode,
     currentMonth: baseState.currentMonth,
     selectedDate: baseState.selectedDate,
-    mode,
-    handlePrev,
-    handleNext,
+    handleDateSelect: baseState.handleDateSelect,
+    handlePrevPeriod,
+    handleNextPeriod,
     updateMode,
   };
 }

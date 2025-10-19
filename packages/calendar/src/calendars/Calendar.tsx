@@ -2,8 +2,9 @@ import { StyleSheet, View } from 'react-native';
 import CalendarHeader from '../components/CalendarHeader';
 import CalendarWeekDays from '../components/CalendarWeekDays';
 import CalendarGrid from '../components/CalendarGrid';
-import { type LocaleKey } from '../utils/locale';
+import { getMonthYearText, type LocaleKey } from '../utils/locale';
 import useCalendarState from '../hooks/useCalendarState';
+import { useMemo } from 'react';
 
 export interface CalendarProps {
   defaultDate?: Date;
@@ -22,14 +23,17 @@ const Calendar: React.FC<CalendarProps> = (props) => {
     handleNextMonth,
   } = useCalendarState(rest);
 
+  const title = useMemo(() => {
+    return getMonthYearText(currentMonth, locale);
+  }, [currentMonth, locale]);
+
   return (
     <View style={styles.container}>
       {/* 달력 주/월 변경 헤더 */}
       <CalendarHeader
-        month={currentMonth}
+        title={title}
         onClickPreviousMonth={handlePrevMonth}
         onClickNextMonth={handleNextMonth}
-        locale={locale}
       />
 
       {/* 요일 표시 */}
