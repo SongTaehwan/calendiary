@@ -57,7 +57,6 @@ const useExpandableCalendarState = ({
     }
 
     if (isDifferentMonthOrYear(controlledSelectedDate, currentMonth)) {
-      console.log('setCurrentMonth', controlledSelectedDate);
       setCurrentMonth(controlledSelectedDate);
     }
   }, [controlledSelectedDate, isControlled]);
@@ -85,44 +84,36 @@ const useExpandableCalendarState = ({
 
   // 이전 달로 이동
   const handlePrevMonth = useCallback(() => {
-    console.log('prev month');
     setCurrentMonth((prev) => addMonths(prev, -1));
   }, []);
 
   // 다음 달로 이동
   const handleNextMonth = useCallback(() => {
-    console.log('next month');
     setCurrentMonth((prev) => addMonths(prev, 1));
   }, []);
 
   // 이전 주로 이동
   const handlePrevWeek = useCallback(() => {
-    console.log('prev week');
     setCurrentMonth((prev) => addWeeks(prev, -1));
   }, []);
 
   // 다음 주로 이동
   const handleNextWeek = useCallback(() => {
-    console.log('next week');
     setCurrentMonth((prev) => addWeeks(prev, 1));
   }, []);
 
   const handlePrevPeriod = useCallback(() => {
     if (mode === 'week') {
-      console.log('handlePrevWeek');
       handlePrevWeek();
     } else {
-      console.log('handlePrevMonth');
       handlePrevMonth();
     }
   }, [mode, handlePrevWeek, handlePrevMonth]);
 
   const handleNextPeriod = useCallback(() => {
     if (mode === 'week') {
-      console.log('handleNextWeek');
       handleNextWeek();
     } else {
-      console.log('handleNextMonth');
       handleNextMonth();
     }
   }, [mode, handleNextWeek, handleNextMonth]);
