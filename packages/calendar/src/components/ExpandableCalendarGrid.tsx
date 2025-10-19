@@ -1,6 +1,5 @@
 import { useMemo, useRef } from 'react';
 import { View, FlatList, StyleSheet, useWindowDimensions } from 'react-native';
-import { type CalendarDate } from '../utils/calendar';
 import Day from './Day';
 import useAnimatedHeightTransition from '../hooks/utils/useAnimatedHeightTransition';
 import useCalendarMonthsData from '../hooks/domains/useCalendarMonthsData';
@@ -12,6 +11,7 @@ import {
   GestureDetector,
   GestureHandlerRootView,
 } from 'react-native-gesture-handler';
+import { type CalendarData, type CalendarDate } from '../hooks/domains/types';
 
 interface ExpandableCalendarGridProps {
   viewMode: 'month' | 'week';
