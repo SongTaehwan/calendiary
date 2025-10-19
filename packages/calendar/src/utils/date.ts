@@ -44,7 +44,7 @@ export const getDaysInMonth = (year: number, month: number): number => {
 /**
  * 0: 일요일, 1: 월요일, 2: 화요일, 3: 수요일, 4: 목요일, 5: 금요일, 6: 토요일
  */
-export const getWeekDay = (date: Date): number => {
+export const getWeekDayIndex = (date: Date): number => {
   return date.getDay();
 };
 
@@ -54,7 +54,7 @@ export const getWeekDay = (date: Date): number => {
  * @returns
  */
 export const getWeekStart = (date: Date): Date => {
-  return addDays(date, -getWeekDay(date));
+  return addDays(date, -getWeekDayIndex(date));
 };
 
 /**
@@ -99,6 +99,9 @@ export const addMonths = (date: Date, months: number): Date => {
   return startOfDay(newDate);
 };
 
+/**
+ * 같은 날짜인지 여부 확인 (연, 월, 일 비교)
+ */
 export const isSameDay = (date1: Date, date2: Date): boolean => {
   return (
     date1.getFullYear() === date2.getFullYear() &&
@@ -107,6 +110,9 @@ export const isSameDay = (date1: Date, date2: Date): boolean => {
   );
 };
 
+/**
+ * 같은 월인지 여부 확인 (연, 월 비교)
+ */
 export const isSameMonth = (date1: Date, date2: Date): boolean => {
   return (
     date1.getFullYear() === date2.getFullYear() &&
@@ -114,11 +120,17 @@ export const isSameMonth = (date1: Date, date2: Date): boolean => {
   );
 };
 
-export const getWeek = (date: Date): number => {
-  return Math.floor((date.getDate() - getWeekDay(date)) / 7);
+/**
+ * 입력받은 날짜가 속한 주(week) 인덱스 반환 (일요일 기준 0-based)
+ * 예) 달력이 아닌 수학적으로 한 달의 몇 번째 주인지 계산 (한 달을 4주로 보는 경우)
+ */
+export const getWeekIndex = (date: Date): number => {
+  return Math.floor((date.getDate() - getWeekDayIndex(date)) / 7);
 };
 
-// 윤년 여부 확인
+/**
+ * 윤년 여부 확인
+ */
 export const isLeapYear = (year: number): boolean => {
   if (year < 0) {
     throw new Error(`Invalid year: ${year}`);
@@ -127,6 +139,9 @@ export const isLeapYear = (year: number): boolean => {
   return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
 };
 
+/**
+ * 연도 또는 월이 다른지 여부 확인
+ */
 export const isDifferentMonthOrYear = (date1: Date, date2: Date): boolean => {
   return (
     date1.getMonth() !== date2.getMonth() ||

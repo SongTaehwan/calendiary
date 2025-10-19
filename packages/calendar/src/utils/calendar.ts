@@ -4,7 +4,7 @@ import {
   isSameDay,
   isSameMonth,
   getMonthStart,
-  getWeekDay,
+  getWeekDayIndex,
   addDays,
   getDaysInMonth,
 } from './date';
@@ -25,7 +25,7 @@ export const getWeeksInMonth = (year: number, month: number): number => {
   }
 
   const monthStart = new Date(year, month, 1);
-  const firstDayOfWeek = getWeekDay(monthStart); // 1일의 요일
+  const firstDayOfWeek = getWeekDayIndex(monthStart); // 1일의 요일
   const daysInMonth = getDaysInMonth(year, month); // 해당 월의 총 일수
 
   // 필요한 주 수 = (첫 날의 요일 + 총 일수) / 7을 올림
@@ -57,7 +57,7 @@ export const generateMonthCalendarDates = (
   const monthStart = getMonthStart(currentMonthDate);
 
   // 1일의 요일 확인
-  const firstDayOfWeek = getWeekDay(monthStart);
+  const firstDayOfWeek = getWeekDayIndex(monthStart);
 
   // 달력의 시작일 계산: 1일이 일요일이 아니면 이전 달 날짜부터 시작
   const calendarStart = addDays(monthStart, -firstDayOfWeek);
@@ -105,20 +105,21 @@ export const generateWeekCalendarDates = (
 
 /**
  * 날짜가 속한 주의 인덱스 계산 (0-based)
+ * 예) '달력 표시'에서 이번달의 몇 번째 주인지 계산 (달력상 한 달은 4~6주로 표시)
  * @param date - 확인할 날짜
- * @returns 해당 월에서 몇 번째 주인지 (0부터 시작)
+ * @returns 달력 표시에서 해당 월에서 몇 번째 주인지 (0부터 시작)
  */
 export const getWeekIndexInMonth = (date: Date): number => {
   const monthStart = getMonthStart(date);
-  const firstDayOfWeek = getWeekDay(monthStart);
+  const firstDayOfWeek = getWeekDayIndex(monthStart);
   const dayOfMonth = date.getDate();
   return Math.floor((firstDayOfWeek + dayOfMonth - 1) / 7);
 };
 
 /**
- * 날짜가 속한 주차 계산 (1-based)
+ * 달력 표시에서 날짜가 속한 주차 계산 (1-based)
  * @param date - 확인할 날짜
- * @returns 해당 월의 몇 번째 주인지 (1부터 시작)
+ * @returns 달력 표시에서 해당 월의 몇 번째 주인지 (1부터 시작)
  */
 export const getWeekOfMonth = (date: Date): number => {
   return getWeekIndexInMonth(date) + 1;

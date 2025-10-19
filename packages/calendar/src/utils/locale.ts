@@ -1,4 +1,4 @@
-import { getWeekIndexInMonth, getWeekOfMonth } from './calendar';
+import { getWeekIndexInMonth } from './calendar';
 
 type LocaleConfiguration = {
   weekDayText: string[];

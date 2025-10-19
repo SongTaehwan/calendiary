@@ -3,7 +3,7 @@ import CalendarHeader from '../components/CalendarHeader';
 import CalendarWeekDays from '../components/CalendarWeekDays';
 import CalendarGrid from '../components/CalendarGrid';
 import { getMonthYearText, type LocaleKey } from '../utils/locale';
-import useCalendarState from '../hooks/useCalendarState';
+import useCalendarState from '../hooks/domains/useCalendarState';
 import { useMemo } from 'react';
 
 export interface CalendarProps {

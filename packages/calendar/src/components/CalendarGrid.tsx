@@ -1,12 +1,18 @@
 import { useMemo, useRef } from 'react';
 import { View, FlatList, StyleSheet, useWindowDimensions } from 'react-native';
-import { type CalendarDate } from '../hooks/domains/types';
-import Day from './Day';
-import useAnimatedHeightTransition from '../hooks/utils/useAnimatedHeightTransition';
-import useCalendarMonthsData from '../hooks/domains/useCalendarMonthsData';
-import { useInfiniteHorizontalScroll } from '../hooks/utils/useInfiniteHorizontalScroll';
 import Animated from 'react-native-reanimated';
-import { useCalendarHeight } from '../hooks/domains/useCalendarHeight';
+
+// utility hooks
+import useInfiniteHorizontalScroll from '../hooks/utils/useInfiniteHorizontalScroll';
+import useAnimatedHeightTransition from '../hooks/utils/useAnimatedHeightTransition';
+
+// domain hooks
+import useCalendarMonthsData from '../hooks/domains/useCalendarMonthsData';
+import useCalendarHeight from '../hooks/domains/useCalendarHeight';
+import { type CalendarDate } from '../hooks/domains/types';
+
+// components
+import Day from './Day';
 
 interface CalendarGridProps {
   currentMonth: Date;
