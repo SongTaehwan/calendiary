@@ -85,21 +85,21 @@ export const generateMonthCalendarDates = (
 
 export const generateWeekCalendarDates = (
   weekStart: Date,
-  selectedDate?: Date
+  selectedDate: Date
 ): CalendarDate[] => {
   const today = getToday();
   const dates: CalendarDate[] = [];
 
   for (let i = 0; i < 7; i++) {
     const date = addDays(weekStart, i);
-
     dates.push({
       date,
-      isCurrentMonth: isSameMonth(date, weekStart),
+      isCurrentMonth: isSameMonth(date, selectedDate),
       isToday: isSameDay(date, today),
-      isSelected: selectedDate ? isSameDay(date, selectedDate) : false,
+      isSelected: isSameDay(date, selectedDate),
     });
   }
+
   return dates;
 };
 
