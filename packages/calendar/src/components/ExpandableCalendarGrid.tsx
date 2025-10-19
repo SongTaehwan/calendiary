@@ -1,17 +1,24 @@
 import { useMemo, useRef } from 'react';
 import { View, FlatList, StyleSheet, useWindowDimensions } from 'react-native';
-import Day from './Day';
-import useAnimatedHeightTransition from '../hooks/utils/useAnimatedHeightTransition';
-import useCalendarMonthsData from '../hooks/domains/useCalendarMonthsData';
-import { useInfiniteHorizontalScroll } from '../hooks/utils/useInfiniteHorizontalScroll';
-import Animated from 'react-native-reanimated';
-import { useCalendarHeight } from '../hooks/domains/useCalendarHeight';
-import useVerticalSwipeGesture from '../hooks/utils/useVerticalSwipeGesture';
 import {
   GestureDetector,
   GestureHandlerRootView,
 } from 'react-native-gesture-handler';
+import Animated from 'react-native-reanimated';
+
+// domain hooks
 import { type CalendarData, type CalendarDate } from '../hooks/domains/types';
+import useCalendarMonthsData from '../hooks/domains/useCalendarMonthsData';
+import useCalendarHeight from '../hooks/domains/useCalendarHeight';
+import useCalendarWeeksData from '../hooks/domains/useCalendarWeeksData';
+
+// utility hooks
+import useAnimatedHeightTransition from '../hooks/utils/useAnimatedHeightTransition';
+import useInfiniteHorizontalScroll from '../hooks/utils/useInfiniteHorizontalScroll';
+import useVerticalSwipeGesture from '../hooks/utils/useVerticalSwipeGesture';
+
+// components
+import Day from './Day';
 
 interface ExpandableCalendarGridProps {
   viewMode: 'month' | 'week';
@@ -33,12 +40,23 @@ const ExpandableCalendarGrid = ({
   updateMode,
 }: ExpandableCalendarGridProps) => {
   const { width: calendarWidth } = useWindowDimensions();
-  const flatListRef = useRef<FlatList>(null);
+  const monthCalendarRef = useRef<FlatList>(null);
+  const weekCalendarRef = useRef<FlatList>(null);
+  const isWeekMode = viewMode === 'week';
 
+  // 월 달력 데이터
   const monthsData = useCalendarMonthsData({
     currentMonth,
     selectedDate,
   });
+
+  // 주 달력 데이터
+  const weeksData = useCalendarWeeksData({
+    currentMonth,
+    selectedDate,
+  });
+
+  console.log('weeksData', weeksData);
 
   const calendarHeight = useCalendarHeight({
     datesCount: monthsData[1]?.dates.length ?? 0,
@@ -55,15 +73,27 @@ const ExpandableCalendarGrid = ({
     onSwipeDown: () => updateMode('month'),
   });
 
-  const { handleMomentumScrollEnd, handleGetItemLayout } =
-    useInfiniteHorizontalScroll({
-      itemWidth: calendarWidth,
-      scrollableRef: flatListRef,
-      onScrollToPrev: onSwipeLeft,
-      onScrollToNext: onSwipeRight,
-    });
+  const {
+    handleMomentumScrollEnd: handleMomentumScrollEndWeek,
+    handleGetItemLayout: handleGetItemLayoutWeek,
+  } = useInfiniteHorizontalScroll({
+    itemWidth: calendarWidth,
+    scrollableRef: weekCalendarRef,
+    onScrollToPrev: onSwipeLeft,
+    onScrollToNext: onSwipeRight,
+  });
 
-  const renderWeeks = useMemo(
+  const {
+    handleMomentumScrollEnd: handleMomentumScrollEndMonth,
+    handleGetItemLayout: handleGetItemLayoutMonth,
+  } = useInfiniteHorizontalScroll({
+    itemWidth: calendarWidth,
+    scrollableRef: monthCalendarRef,
+    onScrollToPrev: onSwipeLeft,
+    onScrollToNext: onSwipeRight,
+  });
+
+  const renderWeeksInMonth = useMemo(
     () =>
       (
         monthKey: string,
@@ -94,42 +124,94 @@ const ExpandableCalendarGrid = ({
     []
   );
 
-  const renderMonths = useMemo(
+  const renderMonthCalendarItem = useMemo(
     () =>
-      ({ item }: { item: (typeof monthsData)[0] }) => {
+      ({ item }: { item: CalendarData }) => {
         const { key: monthKey, dates: monthDates, weeksCount } = item;
 
         return (
-          <View style={[styles.monthContainer, { width: calendarWidth }]}>
+          <View
+            style={[styles.monthCalendarContainer, { width: calendarWidth }]}
+          >
             {Array.from({ length: weeksCount }).map((_, weekIndex) =>
-              renderWeeks(monthKey, monthDates, weekIndex, onSelectDate)
+              renderWeeksInMonth(monthKey, monthDates, weekIndex, onSelectDate)
             )}
           </View>
         );
       },
-    [calendarWidth, onSelectDate, renderWeeks]
+    [calendarWidth, onSelectDate, renderWeeksInMonth]
+  );
+
+  const renderWeekCalendarItem = useMemo(
+    () =>
+      ({ item }: { item: CalendarData }) => {
+        const { key: weekKey, dates: weekDates } = item;
+        console.log(
+          'grid:weekKey',
+          weekDates.map((date) => date.date.toDateString())
+        );
+
+        return (
+          <View
+            style={[styles.weekCalendarContainer, { width: calendarWidth }]}
+          >
+            <View style={styles.weekContainer}>
+              {weekDates.map((calendarDate, dayIndex) => {
+                const dayKey = `${weekKey}-day-${dayIndex}`;
+                return (
+                  <Day
+                    key={dayKey}
+                    calendarDate={calendarDate}
+                    onPress={onSelectDate}
+                  />
+                );
+              })}
+            </View>
+          </View>
+        );
+      },
+    [calendarWidth, onSelectDate, renderWeeksInMonth]
   );
 
   return (
     <GestureHandlerRootView>
       <GestureDetector gesture={panGesture}>
         <Animated.View style={[styles.container, { height: animatedHeight }]}>
-          <FlatList<(typeof monthsData)[0]>
-            ref={flatListRef}
-            data={monthsData}
-            renderItem={renderMonths}
-            keyExtractor={(item) => item.key}
-            horizontal
-            pagingEnabled
-            showsHorizontalScrollIndicator={false}
-            scrollEventThrottle={16}
-            onMomentumScrollEnd={handleMomentumScrollEnd}
-            getItemLayout={handleGetItemLayout}
-            initialScrollIndex={1}
-            decelerationRate={'fast'}
-            bounces={false}
-            removeClippedSubviews={false}
-          />
+          {isWeekMode ? (
+            <FlatList<(typeof monthsData)[0]>
+              ref={weekCalendarRef}
+              data={weeksData}
+              renderItem={renderWeekCalendarItem}
+              keyExtractor={(item) => item.key}
+              horizontal
+              pagingEnabled
+              showsHorizontalScrollIndicator={false}
+              scrollEventThrottle={16}
+              onMomentumScrollEnd={handleMomentumScrollEndWeek}
+              getItemLayout={handleGetItemLayoutWeek}
+              initialScrollIndex={1}
+              decelerationRate={'fast'}
+              bounces={false}
+              removeClippedSubviews={false}
+            />
+          ) : (
+            <FlatList
+              ref={monthCalendarRef}
+              data={monthsData}
+              renderItem={renderMonthCalendarItem}
+              keyExtractor={(item) => item.key}
+              horizontal
+              pagingEnabled
+              showsHorizontalScrollIndicator={false}
+              scrollEventThrottle={16}
+              onMomentumScrollEnd={handleMomentumScrollEndMonth}
+              getItemLayout={handleGetItemLayoutMonth}
+              initialScrollIndex={1}
+              decelerationRate={'fast'}
+              bounces={false}
+              removeClippedSubviews={false}
+            />
+          )}
         </Animated.View>
       </GestureDetector>
     </GestureHandlerRootView>
@@ -140,7 +222,8 @@ const styles = StyleSheet.create({
   container: {
     // backgroundColor: 'green',
   },
-  monthContainer: {},
+  monthCalendarContainer: {},
+  weekCalendarContainer: {},
   weekContainer: {
     flexDirection: 'row',
   },
