@@ -1,6 +1,9 @@
+import { getWeekOfMonth } from './calendar';
+
 type LocaleConfiguration = {
   weekDayText: string[];
   monthText: string[];
+  weekOfMonthText: string[];
 };
 
 export enum SupportedLanguage {
@@ -27,6 +30,7 @@ export const LocaleConfig: Record<string, LocaleConfiguration> = {
       '11월',
       '12월',
     ],
+    weekOfMonthText: ['1주차', '2주차', '3주차', '4주차', '5주차', '6주차'],
   },
   [SupportedLanguage.EN]: {
     weekDayText: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
@@ -43,6 +47,14 @@ export const LocaleConfig: Record<string, LocaleConfiguration> = {
       'October',
       'November',
       'December',
+    ],
+    weekOfMonthText: [
+      '1st week',
+      '2nd week',
+      '3rd week',
+      '4th week',
+      '5th week',
+      '6th week',
     ],
   },
 };
@@ -74,6 +86,38 @@ export const getMonthYearText = (
   }
 
   return `${monthText} ${year}`;
+};
+
+export const getWeekOfMonthText = (
+  date: Date,
+  locale: LocaleKey = SupportedLanguage.KO
+): string => {
+  const localeConfig = getLocaleConfig(locale);
+  const weekOfMonth = getWeekOfMonth(date);
+
+  if (
+    weekOfMonth > localeConfig.weekOfMonthText.length - 1 ||
+    weekOfMonth < 0
+  ) {
+    throw new Error('Week of month is out of range');
+  }
+
+  const weekText = localeConfig.weekOfMonthText[weekOfMonth];
+  return weekText!;
+};
+
+export const getWeekOfMonthTextWithYear = (
+  date: Date,
+  locale: LocaleKey = SupportedLanguage.KO
+): string => {
+  const monthYearText = getMonthYearText(date, locale);
+  const weekOfMonthText = getWeekOfMonthText(date, locale);
+
+  if (locale === SupportedLanguage.KO) {
+    return `${monthYearText} ${weekOfMonthText}`;
+  }
+
+  return `The ${weekOfMonthText} of ${monthYearText}`;
 };
 
 export const getWeekDayNames = (

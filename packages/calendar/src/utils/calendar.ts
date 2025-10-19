@@ -89,3 +89,24 @@ export const generateCalendarDates = (
 
   return dates;
 };
+
+/**
+ * 날짜가 속한 주의 인덱스 계산 (0-based)
+ * @param date - 확인할 날짜
+ * @returns 해당 월에서 몇 번째 주인지 (0부터 시작)
+ */
+export const getWeekIndexInMonth = (date: Date): number => {
+  const monthStart = getMonthStart(date);
+  const firstDayOfWeek = getWeekDay(monthStart);
+  const dayOfMonth = date.getDate();
+  return Math.floor((firstDayOfWeek + dayOfMonth - 1) / 7);
+};
+
+/**
+ * 날짜가 속한 주차 계산 (1-based)
+ * @param date - 확인할 날짜
+ * @returns 해당 월의 몇 번째 주인지 (1부터 시작)
+ */
+export const getWeekOfMonth = (date: Date): number => {
+  return getWeekIndexInMonth(date) + 1;
+};
