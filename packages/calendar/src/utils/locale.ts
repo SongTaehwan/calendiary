@@ -1,4 +1,4 @@
-import { getWeekOfMonth } from './calendar';
+import { getWeekIndexInMonth, getWeekOfMonth } from './calendar';
 
 type LocaleConfiguration = {
   weekDayText: string[];
@@ -93,16 +93,16 @@ export const getWeekOfMonthText = (
   locale: LocaleKey = SupportedLanguage.KO
 ): string => {
   const localeConfig = getLocaleConfig(locale);
-  const weekOfMonth = getWeekOfMonth(date);
+  const weekIndexOfMonth = getWeekIndexInMonth(date);
 
   if (
-    weekOfMonth > localeConfig.weekOfMonthText.length - 1 ||
-    weekOfMonth < 0
+    weekIndexOfMonth > localeConfig.weekOfMonthText.length - 1 ||
+    weekIndexOfMonth < 0
   ) {
     throw new Error('Week of month is out of range');
   }
 
-  const weekText = localeConfig.weekOfMonthText[weekOfMonth];
+  const weekText = localeConfig.weekOfMonthText[weekIndexOfMonth];
   return weekText!;
 };
 
