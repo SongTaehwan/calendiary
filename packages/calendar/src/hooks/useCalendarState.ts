@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { CalendarProps } from '../calendars/Calendar';
-import { addMonths, getToday, startOfDay } from '../utils/date';
+import { addMonths, addWeeks, getToday, startOfDay } from '../utils/date';
 
 const useCalendarState = ({
   defaultDate,
@@ -85,12 +85,24 @@ const useCalendarState = ({
     setCurrentMonth((prev) => addMonths(prev, 1));
   }, []);
 
+  // 이전 주로 이동
+  const handlePrevWeek = useCallback(() => {
+    setCurrentMonth((prev) => addWeeks(prev, -1));
+  }, []);
+
+  // 다음 주로 이동
+  const handleNextWeek = useCallback(() => {
+    setCurrentMonth((prev) => addWeeks(prev, 1));
+  }, []);
+
   return {
     selectedDate,
     currentMonth,
     handleDateSelect,
     handlePrevMonth,
     handleNextMonth,
+    handlePrevWeek,
+    handleNextWeek,
   };
 };
 
