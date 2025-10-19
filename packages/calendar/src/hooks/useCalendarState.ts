@@ -1,6 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { CalendarProps } from '../calendars/Calendar';
-import { addMonths, addWeeks, getToday, startOfDay } from '../utils/date';
+import {
+  addMonths,
+  getToday,
+  isDifferentMonthOrYear,
+  startOfDay,
+} from '../utils/date';
 
 const useCalendarState = ({
   defaultDate,
@@ -23,9 +28,9 @@ const useCalendarState = ({
     return internalSelectedDate;
   }, [controlledSelectedDate, internalSelectedDate, isControlled]);
 
-  // 현재 표시 중인 월 (선택된 날짜 기준) - 헤더에서 참조
+  // 화면 표시에 사용되는 날짜 - 헤더, 달력 모두 이 날짜를 기준으로 표시
   const [currentMonth, setCurrentMonth] = useState<Date>(
-    () => new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1)
+    new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1)
   );
 
   // handleDateSelect 이벤트를 통해서 날짜를 바꾸지 않고 외부에서 직접 바꾼 경우 월 데이터 업데이트
@@ -35,17 +40,8 @@ const useCalendarState = ({
       return;
     }
 
-    if (
-      controlledSelectedDate.getMonth() !== currentMonth.getMonth() ||
-      controlledSelectedDate.getFullYear() !== currentMonth.getFullYear()
-    ) {
-      setCurrentMonth(
-        new Date(
-          controlledSelectedDate.getFullYear(),
-          controlledSelectedDate.getMonth(),
-          1
-        )
-      );
+    if (isDifferentMonthOrYear(controlledSelectedDate, currentMonth)) {
+      setCurrentMonth(controlledSelectedDate);
     }
   }, [controlledSelectedDate]);
 
@@ -59,10 +55,7 @@ const useCalendarState = ({
       }
 
       // 선택한 날짜가 다른 월이면 해당 월로 변경
-      if (
-        normalizedDate.getMonth() !== currentMonth.getMonth() ||
-        normalizedDate.getFullYear() !== currentMonth.getFullYear()
-      ) {
+      if (isDifferentMonthOrYear(normalizedDate, currentMonth)) {
         setCurrentMonth(
           new Date(normalizedDate.getFullYear(), normalizedDate.getMonth(), 1)
         );
@@ -85,24 +78,12 @@ const useCalendarState = ({
     setCurrentMonth((prev) => addMonths(prev, 1));
   }, []);
 
-  // 이전 주로 이동
-  const handlePrevWeek = useCallback(() => {
-    setCurrentMonth((prev) => addWeeks(prev, -1));
-  }, []);
-
-  // 다음 주로 이동
-  const handleNextWeek = useCallback(() => {
-    setCurrentMonth((prev) => addWeeks(prev, 1));
-  }, []);
-
   return {
     selectedDate,
     currentMonth,
     handleDateSelect,
     handlePrevMonth,
     handleNextMonth,
-    handlePrevWeek,
-    handleNextWeek,
   };
 };
 
