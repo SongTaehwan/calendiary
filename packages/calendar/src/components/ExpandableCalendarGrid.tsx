@@ -1,9 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { View, FlatList, StyleSheet, useWindowDimensions } from 'react-native';
-import {
-  GestureDetector,
-  GestureHandlerRootView,
-} from 'react-native-gesture-handler';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
 // domain hooks
@@ -14,7 +10,6 @@ import useCalendarHeight from '../hooks/domains/useCalendarHeight';
 // utility hooks
 import useAnimatedHeightTransition from '../hooks/utils/useAnimatedHeightTransition';
 import useInfiniteHorizontalScroll from '../hooks/utils/useInfiniteHorizontalScroll';
-import useVerticalSwipeGesture from '../hooks/utils/useVerticalSwipeGesture';
 
 // components
 import { getWeekIndexInMonth } from '../utils/calendar';
@@ -26,8 +21,6 @@ interface ExpandableCalendarGridProps {
   currentMonth: Date;
   selectedDate: Date;
   onSelectDate: (date: Date) => void;
-  onSwipeUp: () => void;
-  onSwipeDown: () => void;
   onSwipeLeft: () => void;
   onSwipeRight: () => void;
 }
@@ -42,8 +35,6 @@ const ExpandableCalendarGrid = ({
   onSelectDate,
   onSwipeLeft,
   onSwipeRight,
-  onSwipeUp,
-  onSwipeDown,
 }: ExpandableCalendarGridProps) => {
   const ANIMATION_DURATION = 300;
   const { width: calendarWidth } = useWindowDimensions();
@@ -81,11 +72,6 @@ const ExpandableCalendarGrid = ({
   const animatedHeight = useAnimatedHeightTransition({
     height: isWeekMode ? weekHeight : calendarHeight,
     duration: ANIMATION_DURATION + 50,
-  });
-
-  const panGesture = useVerticalSwipeGesture({
-    onSwipeUp,
-    onSwipeDown,
   });
 
   const {
@@ -171,8 +157,7 @@ const ExpandableCalendarGrid = ({
   );
 
   return (
-    <GestureHandlerRootView style={styles.container}>
-      <GestureDetector gesture={panGesture}>
+    
         <Animated.View style={[styles.container, { height: animatedHeight }]}>
           {/* 주간 달력 */}
           {shouldRenderWeekList && (
@@ -216,8 +201,6 @@ const ExpandableCalendarGrid = ({
             </Animated.View>
           )}
         </Animated.View>
-      </GestureDetector>
-    </GestureHandlerRootView>
   );
 };
 

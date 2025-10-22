@@ -9,6 +9,8 @@ import CalendarWeekDays from '../components/CalendarWeekDays';
 import useExpandableCalendarState from '../hooks/domains/useExpandableCalendarState';
 import { useCallback, useMemo } from 'react';
 import ExpandableCalendarGrid from '../components/ExpandableCalendarGrid';
+import { GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler';
+import useVerticalSwipeGesture from '../hooks/utils/useVerticalSwipeGesture';
 
 export interface ExpandableCalendarProps {
   defaultDate?: Date;
@@ -51,6 +53,12 @@ const ExpandableCalendar = (props: ExpandableCalendarProps) => {
     updateMode('week');
   }, [updateMode]);
 
+
+  const panGesture = useVerticalSwipeGesture({
+    onSwipeUp: handleSwipeUp,
+    onSwipeDown: handleSwipeDown,
+  });
+
   return (
     <View style={styles.container}>
       {/* 달력 헤더 (월/주 이동 버튼 포함) */}
@@ -64,6 +72,8 @@ const ExpandableCalendar = (props: ExpandableCalendarProps) => {
       <CalendarWeekDays locale={locale} />
 
       {/* 확장 가능한 달력 그리드 */}
+      <GestureHandlerRootView style={styles.container}>
+            <GestureDetector gesture={panGesture}>
       <ExpandableCalendarGrid
         viewMode={mode}
         currentMonth={currentMonth}
@@ -71,9 +81,9 @@ const ExpandableCalendar = (props: ExpandableCalendarProps) => {
         onSelectDate={handleDateSelect}
         onSwipeLeft={handlePrevPeriod}
         onSwipeRight={handleNextPeriod}
-        onSwipeUp={handleSwipeUp}
-        onSwipeDown={handleSwipeDown}
       />
+      </GestureDetector>
+      </GestureHandlerRootView>
     </View>
   );
 };
